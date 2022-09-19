@@ -21,21 +21,30 @@ type Props = {
 const Timeline: FC<Props> = ({ videos, videoType = 'Post' }) => {
   const isComment = videoType === 'Comment'
   const isMirror = videoType === 'Mirror'
+
+  const displayComment = isPub && isComment;
+  const displayMirroredVideoCard = isPub && isMirror;
+
   return (
     <div className="grid gap-x-5 lg:grid-cols-4 md:gap-y-8 gap-y-2 2xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 xs:grid-col-1">
       {videos?.map((video: LenstubePublication) => {
         const isPub = video.__typename === videoType && !video.collectedBy
-        return isPub && isComment ? (
+        if (displayComment) { return (
           <CommentedVideoCard
             key={`${video?.id}_${video.createdAt}`}
             video={video}
-          />
-        ) : isPub && isMirror ? (
+          />)};
+	if (displayMirroredVideoCard) {
+        return (
           <MirroredVideoCard
             key={`${video?.id}_${video.createdAt}`}
             video={video}
           />
-        ) : (
+	)
+	}
+
+	return 
+ 	(
           isPub && (
             <VideoCard key={`${video?.id}_${video.createdAt}`} video={video} />
           )
